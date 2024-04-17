@@ -33,14 +33,22 @@ class System:
                               self.theta_2_initial, self.theta_2_dot_initial, self.theta_2_dot_dot_initial]]
         
     
-    def theta_1_dot_dot(self, theta_1, theta_1_dot,theta_2,theta_2_dot):
+    def theta_1_dot_dot(self, **kwargs):
+        theta_1 = kwargs.get('theta_1', 0)
+        theta_1_dot = kwargs.get('theta_1_dot', 0)
+        theta_2 = kwargs.get('theta_2', 0)
+        theta_2_dot = kwargs.get('theta_2_dot', 0)
         num = (-np.sin(theta_1-theta_2)*(self.m2*self.l2*(theta_2_dot**2) 
                 +self.m2*self.l1*(theta_1_dot**2)*np.cos(theta_1-theta_2)) 
             -self.g*((self.m1 +self.m2)*np.sin(theta_1) - self.m2*(np.sin(theta_2)*np.cos(theta_1-theta_2))))
         den = self.l1*(self.m1+self.m2*((np.sin(theta_1-theta_2))**2))
         return num/den
     
-    def theta_2_dot_dot(self, theta_1, theta_1_dot,theta_2,theta_2_dot):
+    def theta_2_dot_dot(self, **kwargs):
+        theta_1 = kwargs.get('theta_1', 0)
+        theta_1_dot = kwargs.get('theta_1_dot', 0)
+        theta_2 = kwargs.get('theta_2', 0)
+        theta_2_dot = kwargs.get('theta_2_dot', 0)
         num = (np.sin(theta_1-theta_2)*((self.m1+self.m2)*self.l1*(theta_1_dot**2) 
                 +self.m2*self.l2*(theta_2_dot**2)*np.cos(theta_1-theta_2)) 
             +self.g*((self.m1 +self.m2)*(np.sin(theta_1)*np.cos(theta_1-theta_2)-np.sin(theta_2))))
@@ -52,8 +60,10 @@ class System:
         state = {
             'theta_1': current_state[0],
             'theta_1_dot': current_state[1],
+            'theta_1_dot_dot': current_state[2],
             'theta_2': current_state[3],
-            'theta_2_dot': current_state[4]
+            'theta_2_dot': current_state[4],
+            'theta_2_dot_dot': current_state[5]
         }
         return state
         
