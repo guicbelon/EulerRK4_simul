@@ -34,10 +34,11 @@ class System:
         
     
     def theta_1_dot_dot(self, **kwargs):
-        theta_1 = kwargs.get('theta_1', 0)
-        theta_1_dot = kwargs.get('theta_1_dot', 0)
-        theta_2 = kwargs.get('theta_2', 0)
-        theta_2_dot = kwargs.get('theta_2_dot', 0)
+        theta_1 = kwargs.get('theta_1')
+        theta_1_dot = kwargs.get('theta_1_dot')
+        theta_2 = kwargs.get('theta_2')
+        theta_2_dot = kwargs.get('theta_2_dot')
+        
         num = (-np.sin(theta_1-theta_2)*(self.m2*self.l2*(theta_2_dot**2) 
                 +self.m2*self.l1*(theta_1_dot**2)*np.cos(theta_1-theta_2)) 
             -self.g*((self.m1 +self.m2)*np.sin(theta_1) - self.m2*(np.sin(theta_2)*np.cos(theta_1-theta_2))))
@@ -45,10 +46,10 @@ class System:
         return num/den
     
     def theta_2_dot_dot(self, **kwargs):
-        theta_1 = kwargs.get('theta_1', 0)
-        theta_1_dot = kwargs.get('theta_1_dot', 0)
-        theta_2 = kwargs.get('theta_2', 0)
-        theta_2_dot = kwargs.get('theta_2_dot', 0)
+        theta_1 = kwargs.get('theta_1')
+        theta_1_dot = kwargs.get('theta_1_dot')
+        theta_2 = kwargs.get('theta_2')
+        theta_2_dot = kwargs.get('theta_2_dot')
         num = (np.sin(theta_1-theta_2)*((self.m1+self.m2)*self.l1*(theta_1_dot**2) 
                 +self.m2*self.l2*(theta_2_dot**2)*np.cos(theta_1-theta_2)) 
             +self.g*((self.m1 +self.m2)*(np.sin(theta_1)*np.cos(theta_1-theta_2)-np.sin(theta_2))))
@@ -89,13 +90,14 @@ class System:
             x_1_dot_dot = self.l1*np.cos(theta_1)*theta_1_dot_dot - self.l1*np.sin(theta_1)*(theta_1_dot**2)
             y_1 = self.l1*np.cos(theta_1)
             y_1_dot = -self.l1*np.sin(theta_1)*theta_1_dot
-            y_1_dot_dot = -self.l1*np.cos(theta_1)*(theta_1_dot**2) - self.l1*np.sin(theta_1)*theta_1_dot_dot     
-            x_2 = self.l1*np.sin(theta_2) + x_1
-            x_2_dot = self.l1*np.cos(theta_2)*theta_2_dot + x_1_dot
-            x_2_dot_dot = self.l1*np.cos(theta_2)*theta_2_dot_dot - self.l1*np.sin(theta_2)*(theta_2_dot**2)  + x_1_dot_dot
-            y_2 = self.l1*np.cos(theta_2) + y_1
-            y_2_dot = -self.l1*np.sin(theta_2)*theta_2_dot + y_1_dot
-            y_2_dot_dot = -self.l1*np.cos(theta_2)*(theta_2_dot**2) - self.l1*np.sin(theta_2)*theta_2_dot_dot + y_1_dot_dot
+            y_1_dot_dot = -self.l1*np.cos(theta_1)*(theta_1_dot**2) - self.l1*np.sin(theta_1)*theta_1_dot_dot    
+             
+            x_2 = self.l2*np.sin(theta_2) + x_1
+            x_2_dot = self.l2*np.cos(theta_2)*theta_2_dot + x_1_dot
+            x_2_dot_dot = self.l2*np.cos(theta_2)*theta_2_dot_dot - self.l2*np.sin(theta_2)*(theta_2_dot**2)  + x_1_dot_dot
+            y_2 = self.l2*np.cos(theta_2) + y_1
+            y_2_dot = -self.l2*np.sin(theta_2)*theta_2_dot + y_1_dot
+            y_2_dot_dot = -self.l2*np.cos(theta_2)*(theta_2_dot**2) - self.l2*np.sin(theta_2)*theta_2_dot_dot + y_1_dot_dot
             scalar_state = [[x_1, y_1],[x_1_dot, y_1_dot], [x_1_dot_dot, y_1_dot_dot],
                             [x_2, y_2],[x_2_dot, y_2_dot], [x_2_dot_dot, y_2_dot_dot]]
             scalar_states.append(scalar_state)
