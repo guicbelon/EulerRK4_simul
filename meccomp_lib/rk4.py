@@ -3,13 +3,10 @@ import matplotlib.pyplot as plt
 from .leg_system import *
 
 class RK4:
-    def __init__(self, step:float=0.01, n_steps:int = 5000):
+    def __init__(self, step:float=0.01, simulation_time:float = 10):
         self.step = step
-        self.n_steps = n_steps
+        self.n_steps = int(simulation_time/step)
         self.system = System(step=step)
-        
-    def k1(self, state):
-        pass
     
     def apply_f(self, state):
         theta_1 = state[0]
@@ -18,9 +15,9 @@ class RK4:
         theta_2_dot = state[4]
         state_kwargs ={
             'theta_1' : theta_1,
-            'theta_1_dot' : theta_1,
+            'theta_1_dot' : theta_1_dot,
             'theta_2' : theta_2,
-            'theta_2_dot' : theta_2, 
+            'theta_2_dot' : theta_2_dot, 
         }
         
         next_theta_1 = theta_1 + self.step*theta_1_dot
@@ -33,16 +30,21 @@ class RK4:
         
         next_state =[next_theta_1, next_theta_1_dot, next_theta_1_dot_dot, 
                         next_theta_2, next_theta_2_dot, next_theta_2_dot_dot]
+        
+        #next_state = [0 if np.isnan(x) else x for x in next_state]
+        #next_state = [0 if np.isinf(x) else x for x in next_state]
+        
+        #next_state = [round(value,4) for value in next_state]
+
         return next_state
         
         
     def simul(self):
         self.system.reset()
-        for time_step in range(self.n_steps):
+        for time_step in range(self.n_steps): 
             current_state = self.system.get_current_state()
             current_state = np.array(list(current_state.values()))
-            current_state[2] = 0
-            current_state[5] = 0
+            
             k1 = self.apply_f(current_state)
             k1 = np.array(k1)
             
@@ -50,17 +52,21 @@ class RK4:
             k2 = self.apply_f(k2_state)
             k2 = np.array(k2)
             
-            k3_state = k2_state + (self.step/2)*k2
+            k3_state = current_state + (self.step/2)*k2
             k3 = self.apply_f(k3_state)
             k3 = np.array(k3)
             
-            k4_state = k3_state + (self.step)*k3
+            k4_state = current_state + (self.step)*k3
             k4 = self.apply_f(k4_state)
             
             next_state = current_state + (self.step/6)*(k1 + 2*k2 + 2*k3 + k4)
+            next_state[2] = k1[2]
+            next_state[5] = k1[5]
+            
             self.system.insert_state(list(next_state))
             
-    def plot_results(self):        
+
+    def plot_scalar_results(self):        
         time_vector = np.arange(0, self.step*(self.n_steps+1), self.step)
         scalar_states = self.system.retrieve_scalar_states()
         scalar_states = np.array(scalar_states).reshape(self.n_steps+1,12)
@@ -103,6 +109,35 @@ class RK4:
         axs[5, 0].set_title(f'Aceleration in x of mass 2')
         axs[5, 1].plot(time_vector, y_2_dot_dot)
         axs[5, 1].set_title(f'Acceleration in y of mass 2')
+        plt.tight_layout()
+        plt.show()
+        
+    def plot_results(self):        
+        time_vector = np.arange(0, self.step*(self.n_steps+1), self.step)
+        scalar_states = self.system.retrieve_states()
+        
+        scalar_states = np.array(scalar_states).reshape(self.n_steps+1,6)
+        theta_1 = scalar_states[:,0]
+        theta_1_dot = scalar_states[:,1]
+        theta_1_dot_dot = scalar_states[:,2]
+        theta_2 = scalar_states[:,3]
+        theta_2_dot = scalar_states[:,4]
+        theta_2_dot_dot = scalar_states[:,5]
+        
+        fig, axs = plt.subplots(3, 2, figsize=(10, 10))
+        
+        axs[0, 0].plot(time_vector, theta_1, color='blue')
+        axs[0, 0].set_title(f'Position of mass 1')
+        axs[0, 1].plot(time_vector, theta_2,color='red')
+        axs[0, 1].set_title(f'Position of mass 2')
+        axs[1, 0].plot(time_vector, theta_1_dot, color='blue')
+        axs[1, 0].set_title(f'Velocity of mass 1')
+        axs[1, 1].plot(time_vector, theta_2_dot, color='red')
+        axs[1, 1].set_title(f'Velocity of mass 2')
+        axs[2, 0].plot(time_vector, theta_1_dot_dot, color='blue')
+        axs[2, 0].set_title(f'Aceleration of mass 1')
+        axs[2, 1].plot(time_vector, theta_2_dot_dot, color='red')
+        axs[2, 1].set_title(f'Acceleration of mass 2')
         plt.tight_layout()
         plt.show()
 
