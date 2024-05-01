@@ -37,10 +37,9 @@ class RK4(BaseMethod):
         
     def simul(self):
         self.system.reset()
+        current_state = self.system.get_current_state()
+        current_state = np.array(list(current_state.values()))
         for time_step in range(self.n_steps): 
-            current_state = self.system.get_current_state()
-            current_state = np.array(list(current_state.values()))
-            
             k1 = self.apply_f(current_state)
             k1 = np.array(k1)
             
@@ -58,6 +57,7 @@ class RK4(BaseMethod):
             next_state = current_state + (self.step/6)*(k1 + 2*k2 + 2*k3 + k4)
             next_state[2] = k1[2]
             next_state[5] = k1[5]
-            
+            current_state = next_state
             self.system.insert_state(list(next_state))
+            
             
