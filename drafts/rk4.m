@@ -19,6 +19,13 @@ theta_2_dot_initial = 0.1;
 theta_1_dot_dot_initial = 0;
 theta_2_dot_dot_initial = 0;
 
+
+%Vetor de funções derivadas
+fxdot = @(t,x) [x(2);
+        (-sin(x(1)-x(3))*(m2*l1*(x(2)^2)*cos(x(1)-x(3))+m2*l2*(x(4)^2))-g*((m1+m2)*sin(x(1))-m2*sin(x(3))*cos(x(1)-x(3))))/(l1*(m1+m2*(sin((x(1)-x(3))))^2));
+        x(4);
+        (sin(x(1)-x(3))*((m1+m2)*l1*(x(2)^2)+m2*l2*(x(4)^2)*cos(x(1)-x(3)))+g*((m1+m2)*(sin(x(1))*cos(x(1)-x(3))-sin(x(3)))))/(l2*(m1+m2*(sin((x(1)-x(3))))^2))];
+
 % Funções para cálculo das acelerações angulares
 function theta_1_dot_dot_value = theta_1_dot_dot(theta_1, theta_1_dot, theta_2, theta_2_dot)
     global g m1 m2 l1 l2

@@ -41,7 +41,7 @@ class System:
         
         num = (-np.sin(theta_1-theta_2)*(self.m2*self.l2*(theta_2_dot**2) 
                 +self.m2*self.l1*(theta_1_dot**2)*np.cos(theta_1-theta_2)) 
-            -self.g*((self.m1 +self.m2)*np.sin(theta_1) - self.m2*(np.sin(theta_2)*np.cos(theta_1-theta_2))))
+                -self.g*((self.m1 +self.m2)*np.sin(theta_1) - self.m2*(np.sin(theta_2)*np.cos(theta_1-theta_2))))
         den = self.l1*(self.m1+self.m2*((np.sin(theta_1-theta_2))**2))
         return num/den
     
@@ -52,7 +52,7 @@ class System:
         theta_2_dot = kwargs.get('theta_2_dot')
         num = (np.sin(theta_1-theta_2)*((self.m1+self.m2)*self.l1*(theta_1_dot**2) 
                 +self.m2*self.l2*(theta_2_dot**2)*np.cos(theta_1-theta_2)) 
-            +self.g*((self.m1 +self.m2)*(np.sin(theta_1)*np.cos(theta_1-theta_2)-np.sin(theta_2))))
+                +self.g*((self.m1 +self.m2)*(np.sin(theta_1)*np.cos(theta_1-theta_2)-np.sin(theta_2))))
         den = self.l2*(self.m1+self.m2*((np.sin(theta_1-theta_2))**2))
         return num/den
     
