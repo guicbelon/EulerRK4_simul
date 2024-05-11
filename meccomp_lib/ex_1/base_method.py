@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from .leg_system import *
 
 class BaseMethod:
-    def __init__(self, step:float=0.01, simulation_time:float = 10):
-        self.step = step
-        self.n_steps = int(simulation_time/step)
-        self.system = System(step=step)
+    def __init__(self, system:System, simulation_time:float = 10):        
+        self.system = system
+        self.step = self.system.step
+        self.n_steps = int(simulation_time/self.step)
         
     def plot_scalar_results(self):        
         time_vector = np.arange(0, self.step*(self.n_steps+1), self.step)

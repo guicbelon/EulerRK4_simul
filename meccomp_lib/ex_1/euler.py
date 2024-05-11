@@ -1,8 +1,8 @@
 from .base_method import *
 
 class Euler(BaseMethod):
-    def __init__(self, step:float=0.01, simulation_time:float = 10):
-        super().__init__(step=step, simulation_time=simulation_time)
+    def __init__(self, system:System, simulation_time:float = 10):        
+        super().__init__(system=system, simulation_time=simulation_time)
         
     def simul(self):
         self.system.reset()

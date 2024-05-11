@@ -2,8 +2,8 @@ from .base_method import *
 
 
 class RK4(BaseMethod):
-    def __init__(self, step:float=0.01, simulation_time:float = 10):
-        super().__init__(step=step, simulation_time=simulation_time)
+    def __init__(self, system:System, simulation_time:float = 10):        
+        super().__init__(system=system, simulation_time=simulation_time)
        
     def apply_f(self, state):
         theta_1 = state[0]
