@@ -4,10 +4,11 @@ import seaborn as sns
 from .point import Point
 
 class Mesh:
-    def __init__(self, delta: float = 0.01, 
+    def __init__(self, delta: float = 0.1, 
                  rotation_angle_in_degrees: float = 0, 
                  U_infinity: float = 30, 
-                 max_num_of_iterations: float = 10E4):
+                 max_num_of_iterations: float = 10E4,
+                 allow_print:bool=True):
         """
         Initialize a Mesh instance.
         
@@ -24,6 +25,7 @@ class Mesh:
         self.rotation_angle = rotation_angle_in_degrees * np.pi / 180
         self.U_infinity = U_infinity
         self.max_num_of_iterations = max_num_of_iterations
+        self.allow_print = allow_print
         self._preprocess()
     
     def _preprocess(self):
@@ -363,7 +365,8 @@ class Mesh:
                         temp_error = error
             self.num_of_iterations += 1
             max_error = temp_error
-            print(f"Iteration: {self.num_of_iterations} - Max Error: {round(max_error, 5)}")
+            if self.allow_print:
+                print(f"Iteration: {self.num_of_iterations} - Max Error: {round(max_error, 5)}")
         self.calculate_velocity_and_pressure()
         
     def plot_mesh(self): 
@@ -424,10 +427,10 @@ class Mesh:
             for col_id in range(self.num_of_cols):
                 center_point = self.mesh[row_id][col_id]
                 vx_value = center_point.get_del_streamline_del_y()
-                vy_value = center_point.get_del_streamline_del_x()
+                vy_value = -center_point.get_del_streamline_del_x()
                 if (vx_value != 0) and (vy_value != 0):
                     x_pos.append(center_point.x_pos)
-                    y_pos.append(center_point.y_pos)
+                    y_pos.append(-center_point.y_pos)
                     vel_in_x.append(vx_value)
                     vel_in_y.append(vy_value)
         fig, ax = plt.subplots()
