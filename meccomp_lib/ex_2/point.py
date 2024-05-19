@@ -39,7 +39,7 @@ class Point:
         self.normal_direction = None
         self.g = 9.8
         self.density = 1
-        self.bernoulli_result = 10E5 / (self.density * self.g)
+        self.bernoulli_result = 1E5 / (self.density * self.g)
         
     def set_streamline(self, streamline):
         """
@@ -112,4 +112,4 @@ class Point:
         if self.is_airfoil:
             return
         self.pressure = self.density * self.g * (
-            self.bernoulli_result - (self.absolute_velocity**2) / 2 * self.g)
+            self.bernoulli_result - (self.absolute_velocity**2)/(2 * self.g))

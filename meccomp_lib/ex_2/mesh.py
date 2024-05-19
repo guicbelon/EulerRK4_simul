@@ -3,11 +3,12 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 from .point import Point
 
+
 class Mesh:
     def __init__(self, delta: float = 0.1, 
                  rotation_angle_in_degrees: float = 0, 
                  U_infinity: float = 30, 
-                 max_num_of_iterations: float = 10E4,
+                 max_num_of_iterations: float = 10E5,
                  allow_print:bool=True):
         """
         Initialize a Mesh instance.
@@ -435,20 +436,27 @@ class Mesh:
                     vel_in_y.append(vy_value)
         fig, ax = plt.subplots()
         ax.quiver(x_pos, y_pos, vel_in_x, vel_in_y)
-        plt.title(f'Vetores de velocidade Absoluta \n Discretização: {self.delta} - Ângulo de entrada: {self.rotation_angle_in_degrees} graus')
+        plt.title(f'Vetores de Velocidade Absoluta \n Discretização: {self.delta} - Ângulo de entrada: {self.rotation_angle_in_degrees} graus')
         plt.axis('off')
         plt.show()
 
         
-    def plot_pressure(self, plot_contour: bool = False):
+    def plot_pressure(self, plot_contour: bool = False, plot_minimum: bool = False):
         """
         Plot the pressure distribution in the flow field.
         
         Parameters:
         plot_contour (bool): Whether to plot contour lines on the pressure plot.
+        
+        plot_minimum (bool): Whether to plot minimum value of pressure in the plot.
         """
         mesh_values = self.get_parameter_value(pressure=True)
         mesh_values = np.array(mesh_values)
+        mesh_no_zero_mask = (mesh_values != 0)
+        min_pressure = np.min(mesh_values[mesh_no_zero_mask])
+        min_pressure_position = np.where(mesh_values == min_pressure)
+        min_pressure_y = min_pressure_position[0][0]
+        min_pressure_x = min_pressure_position[1][0]
         mask = np.zeros_like(mesh_values, dtype=bool)
         mask[mesh_values == 0] = True
         sns.heatmap(mesh_values, annot=False, cmap='Spectral', linewidths=0, mask=mask, cbar_kws={'extend': 'both'})
@@ -458,5 +466,10 @@ class Mesh:
             plt.contour(mesh_values, levels=levels, colors='k', linestyles='solid', linewidths=2, alpha=0.7,
                         extent=(0, mesh_values.shape[1], 0, mesh_values.shape[0]))
         plt.title(f'Pressão (Pa)\n Discretização: {self.delta} - Ângulo de entrada: {self.rotation_angle_in_degrees} graus')
+        if plot_minimum:
+            plt.scatter(min_pressure_x + 0.5, min_pressure_y + 0.5, color='red', marker='x', s=100, label=f'Menor valor de pressão: {round(min_pressure,3)} Pa')
+            plt.legend()
         plt.axis('off')
         plt.show()
+
+        
