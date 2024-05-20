@@ -347,10 +347,10 @@ class Mesh:
                 point = self.mesh[row_id][col_id]
                 if point.is_in_airfoil_surface:
                     num_of_points += 1
-                    drag_forces += self.delta * point.pressure * point.normal_direction[0]
-                    lifting_forces += self.delta * point.pressure * point.normal_direction[1]
+                    drag_forces += point.pressure * point.normal_direction[0]
+                    lifting_forces += point.pressure * point.normal_direction[1]
         self.drag_forces = 2 * (self.airfoil_width + self.airfoil_height) * drag_forces / num_of_points
-        self.lifting_forces = 2 * (self.airfoil_width + self.airfoil_height) * lifting_forces / num_of_points
+        self.lifting_forces = -2 * (self.airfoil_width + self.airfoil_height) * lifting_forces / num_of_points
     
     def simul(self):
         """
